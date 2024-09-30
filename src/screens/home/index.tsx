@@ -1,4 +1,5 @@
 import { ColorSwatch, Group } from '@mantine/core';
+import { Button } from '@/components/ui/button';
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import Draggable from 'react-draggable';
@@ -26,6 +27,8 @@ export default function Home() {
     const [latexPosition, setLatexPosition] = useState({ x: 10, y: 200 });
     const [latexExpression, setLatexExpression] = useState<Array<string>>([]);
 
+
+
     // const lazyBrush = new LazyBrush({
     //     radius: 10,
     //     enabled: true,
@@ -39,6 +42,7 @@ export default function Home() {
             }, 0);
         }
     }, [latexExpression]);
+
 
     useEffect(() => {
         if (result) {
@@ -147,7 +151,7 @@ export default function Home() {
         if (canvas) {
             const response = await axios({
                 method: 'post',
-                url: `${import.meta.env.VITE_BACKEND_URL}/calculate`,
+                url: `${import.meta.env.VITE_API_URL}/calculate`,
                 data: {
                     image: canvas.toDataURL('image/png'),
                     dict_of_vars: dictOfVars
@@ -198,31 +202,33 @@ export default function Home() {
 
     return (
         <>
-            <div className='grid grid-cols-3 md:gap-20 bg-black'>
-                    <button
+            <div className='grid grid-cols-3 gap-2'>
+                <Button
                     onClick={() => setReset(true)}
-                    className=' px-3 py-1 z-20 bg-black text-white'
-                    color='white'
+                    className='z-20 bg-black text-white'
+                    variant='default'
+                    color='black'
                 >
-                    reset
-                </button>
+                    Reset
+                </Button>
                 <Group className='z-20'>
                     {SWATCHES.map((swatch) => (
                         <ColorSwatch key={swatch} color={swatch} onClick={() => setColor(swatch)} />
                     ))}
                 </Group>
-                <button
+                <Button
                     onClick={runRoute}
-                    className=' px-3 py-1 z-20 bg-black text-white'
+                    className='z-20 bg-black text-white'
+                    variant='default'
                     color='white'
                 >
                     Run
-                </button>
+                </Button>
             </div>
             <canvas
                 ref={canvasRef}
                 id='canvas'
-                className='absolute top-0 left-0 w-full h-full bg-black'
+                className='absolute top-0 left-0 w-full h-full'
                 onMouseDown={startDrawing}
                 onMouseMove={draw}
                 onMouseUp={stopDrawing}
@@ -233,7 +239,6 @@ export default function Home() {
                 <Draggable
                     key={index}
                     defaultPosition={latexPosition}
-                    onStop={( data) => setLatexPosition({ x: data.x, y: data.y })}
                 >
                     <div className="absolute p-2 text-white rounded shadow-md">
                         <div className="latex-content">{latex}</div>
